@@ -1,0 +1,19 @@
+
+<form method="post" action="/calculate">
+  <input name="x"> <p id="thig"> + </p> <input name ="func" id="thing" type="hidden"> <input name="y">
+  <input type="submit" value="calculate">
+</form>
+
+<div><button onclick="process('*')">Multiply</buttton>
+  <button onclick="process('/')">Divide</buttton>
+    <button onclick="process('+')">Add</buttton>
+      <button onclick="process('-')">Subtract</buttton></div>
+
+        <script>
+        document.getElementById("thing").value = "+";
+        function process(w){
+          document.getElementById("thig").innerHTML = w;
+          document.getElementById("thing").value = w;
+        }
+
+      </script>
