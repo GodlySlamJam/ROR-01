@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <script type="text/javascript" src="https://rawgithub.com/craftyjs/Crafty/release/dist/crafty-min.js"></script>
+  <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <meta charset="utf-8">
+</head>
+<body>
+  <div type="hidden" id="level" style='display: none;'><%= @dung.dungeon  %></div>
+  <script>
+  // var dungeon =[{"Object":"player","X":11,"Y":44,"Skin":["temp"],"Axis":false},
+  // {"Object":"wall","X":18,"Y":65,"Skin":["https://vignette.wikia.nocookie.net/760a2c71-4dc0-40b3-8fd0-29bfa15cdb71/scale-to-width-down/50","https://orig00.deviantart.net/d14b/f/2015/197/4/b/_fnaf___mangle_pixel_icon__free_to_use__by_the_star_hunter-d91l33v.gif"],"Axis":false},
+  // {"Object":"wall","X":20,"Y":53,"Skin":["https://vignette.wikia.nocookie.net/760a2c71-4dc0-40b3-8fd0-29bfa15cdb71/scale-to-width-down/50","https://orig00.deviantart.net/d14b/f/2015/197/4/b/_fnaf___mangle_pixel_icon__free_to_use__by_the_star_hunter-d91l33v.gif"],"Axis":false}];
+  // let pos = [];
+  let player;
+  let dungeon;
+  let pos = [];
+
+  function start(){
+    dungeon = JSON.parse(document.getElementById("level").innerHTML);
+    console.log(dungeon)
+    Crafty.init();
+    Crafty.enterScene("First");
+  }
+
+  Crafty.defineScene("First", function(){
+
+    for(let num = 0;num < dungeon.length;num++){
+      if(dungeon[num]["Object"] == "wall"){
+        let wall = Crafty.e("2D, DOM, Color, Collision, Solid, Wall, Image")
+        wall.attr({x: parseInt(dungeon[num]["X"])*5, y: parseInt(dungeon[num]["Y"])*5, h:50, w:50})
+        .color("Red")
+        wall.image(dungeon[num]["Skin"][0])
+
+
+      }else if(dungeon[num]["Object"] == "floor"){
+        let floor = Crafty.e("2D, DOM, Color")
+        floor.attr({x:dungeon[num]["X"]*5, y:dungeon[num]["Y"]*5, h:50, w:50})
+        .color("blue")
+
+      }else if(dungeon[num]["Object"] == "player"){
+        player = Crafty.e("2D, DOM, Color, Player, Collision, Fourway");
+        player.attr({x:parseInt(dungeon[num]["X"])*5, y:parseInt(dungeon[num]["Y"])*5, h:25, w:25})
+        player.color("Pink");
+        player.fourway(200, 200);
+          Crafty.c('Player', {
+          init: function() {
+             if(this.hit("Switch")){
+               alert("Yes")
+             }
+          }
+          })
+      } else if(dungeon[num]["Object"] == "switch"){
+          let switc = Crafty.e("2D, DOM, Color, Image, Switch, Collision")
+          switc.attr({x:dungeon[num]["X"]*5, y:dungeon[num]["Y"]*5, h:50, w:50})
+          .color("green")
+    }
+  }
+
+
+
+})
+
+
+
+    window.onload = start;
+    </script>
+    </body>
+    </html>

@@ -5,5 +5,6 @@ class User < ActiveRecord::Migration[5.1]
         t.string :password
         t.string :email
         t.boolean :verify
+      end
   end
 end

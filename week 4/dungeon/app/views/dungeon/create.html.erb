@@ -1,0 +1,248 @@
+<html>
+<head>
+  <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <style>
+  #bar{
+    position:fixed;
+    right:0px;
+    background-color: #89d6e5;
+    width: 12%;
+    height: 800px;
+  }
+
+  #board{
+    top: 0px;
+    position: relative;
+    z-index: 0;
+    display: inline-block;
+  }
+
+  #imtot{
+    position: relative;
+    overflow:scroll;
+    width: 100%;
+    height: 400px;
+    bottom: 0px;
+    display: inline-block;
+
+  }
+
+  #selection{
+    position: relative;
+    overflow:scroll;
+    width: 100%;
+    height: 300px;
+    display: inline-block;
+  }
+
+  .image{
+    z-index: 1;
+    display: inline-block;
+    position: absolute;
+  }
+  </style>
+
+
+</head>
+<body>
+  <div id = "bar" class ="no">
+    <center class ="no">
+    <div class ="no">
+<form method="post" action="/dungeons/">
+  <input name="save" type="hidden" id="save">
+  <input name="played" type="hidden" value="0">
+  <input name="success" type="hidden" value="0">
+  Username:<input name="user">
+  <input type="submit" value="Upload">
+</form>
+</div>
+
+    <button onclick="typ('axis')" class ="no">Axis Switch</button></center>
+
+    <div id ="selection" class ="no">
+    <button onclick="typ('player')" class ="no">Player</button>
+    <button onclick="typ('wall')" class ="no">Wall</button>
+    <button onclick="typ('brick')" class ="no">Brick</button>
+    <button onclick="typ('floor')" class ="no">Floor</button>
+    <button onclick="typ('switch')" class ="no">Switch</button>
+  </div>
+
+    <div id="imtot" class = "no"></div>
+  </div>
+
+  <div id = "board"></div>
+
+  <script>
+  let last = "0-0";
+  let stuff = [];
+  let size = [];
+  let objects = {"wall": {"width": 5, "height": 5, "skin": ["https://vignette.wikia.nocookie.net/760a2c71-4dc0-40b3-8fd0-29bfa15cdb71/scale-to-width-down/50", "https://orig00.deviantart.net/d14b/f/2015/197/4/b/_fnaf___mangle_pixel_icon__free_to_use__by_the_star_hunter-d91l33v.gif"]},
+                 "brick": {"width": 20, "height": 10, "skin": ["temp"]},
+                 "floor": {"width": 5, "height": 5, "skin": ["https://goo.gl/images/JEbLgY"]},
+                 "switch": {"width": 5, "height": 5, "skin": ["https://goo.gl/images/HPY5LD"]},
+                 "player": {"width": 2, "height": 2, "skin": ["temp"]}}
+  let type;
+  let choose = false;
+  let board = [60, 100];
+  let entnum = 0;
+  let axis = false;
+  let image = 0;
+  let skin;
+
+  function load(){
+    for(let x = 0;x < board[0]; x++){
+      $("#board").append("<div id='row" + x + "' style = 'padding:0px; margin:0px;'></div>")
+      document.getElementById("row" + x).style.top = x*10 + "px";
+      document.getElementById("row" + x).style.height = "10px";
+      for(let y = 0;y < board[1]; y++){
+        $("#row" + x).append("<div id='" + x + "-" + y + "' style='background-color: black; height:10px; width: 10px; display: inline-block; position:relative;'></div>")
+        // document.getElementById(x + "-" + y).style.left = y + "px";
+        console.log(y)
+
+      }
+    }
+    // document.getElementById("imagelayer").style.width = board[1] * 10 + "px";
+    // document.getElementById("imagelayer").style.height = board[0] * 10 + "px";
+
+  }
+
+  function typ(thing){
+    if(thing != "axis"){
+    type = thing;
+    image = 0;
+
+    choose = true;
+    console.log("Here")
+  }else{
+    if(axis == true){
+      axis = false;
+    }else{
+      axis = true
+    }
+  }
+  $("#imtot").empty();
+  $("#imtot").append(`<p>X:` + objects[type]["width"] + ' Y:' + objects[type]["height"] + '</p>')
+for(let x = 0;x < objects[type]["skin"].length;x++){
+  $("#imtot").append(`<p><button onclick='skinselect("` + objects[type]["skin"][x] + `")'>Skin ` + x +`</button> <img src='`+ objects[type]["skin"][x] + `'></p>`)
+
+}
+skin = objects[type]["skin"][0];
+
+  }
+
+function skinselect(skinthing){
+  console.log(skinthing)
+  skin = skinthing;
+}
+
+  document.onclick = (e)=>{
+    console.log(e.srcElement.id)
+    if(choose == true && e.srcElement.className != "no"){
+      if(e.srcElement.className != ""){
+      let lengt = document.getElementsByClassName(e.srcElement.className);
+      for(let q = 0; q < lengt.length; q++){
+      document.getElementById(lengt[q].id).style.backgroundColor = "black";
+      console.log(lengt)
+    }
+    let spaceholder = [];
+    let thy = e.srcElement.className
+    for(let d = 0;d < thy.length; d++){
+      if(e.srcElement.className[d] == " " || e.srcElement.className[d] == "-"){
+      spaceholder.push(d)
+    }
+    }
+    console.log(spaceholder)
+    let what = thy.substring(spaceholder[0], spaceholder[1])
+    console.log(what)
+    let whate = parseInt(thy.substring(spaceholder[1] + 4, spaceholder[2]))
+    console.log(whate)
+    let whatel = parseInt(thy.substring(spaceholder[2] + 1,thy.length))
+    console.log(whatel)
+    for(let p = 0; p < stuff.length;p++){
+      console.log(stuff[p]["X"])
+      console.log(whate);
+      if(stuff[p]["X"] === whate && stuff[p]["Y"] === whatel){
+        stuff.splice(p, 1);
+      }
+
+    }
+    let i = 0;
+    while(i < lengt.length){
+      if(lengt.length != 0){
+    lengt[0].className= "";
+  }
+  }
+
+  $("#" + e.srcElement.id).remove();
+    }else{
+      console.log("yes")
+      document.getElementById(last)
+      console.log(e.x);
+      let temp = event.target.id;
+      let y = 0;
+      for(let x = 0;x < temp.length;x++){
+        let ting = x + 1;
+        if(temp.substring(x, ting) == "-"){
+          y = x;
+        }
+      }
+
+      let xpos = temp.substring(0, y);
+      let end = temp.length;
+      y = y + 1;
+      let ypos = temp.substr(y, end);
+      console.log(xpos + "x");
+      console.log(ypos + "y");
+      let item;
+      let oitem;
+      if(axis == false){
+      item = objects[type]["width"] + parseInt(xpos);
+      oitem = objects[type]["height"] + parseInt(ypos);
+    }else{
+      item = objects[type]["height"] + parseInt(xpos);
+      oitem = objects[type]["width"] + parseInt(ypos);
+
+    }
+      let check = 0;
+      for(let z = xpos;z < item;z++){
+        for(let w = ypos;w < oitem;w++){
+          if(document.getElementById(z + "-" + w).style.backgroundColor != "black"){
+            check = 1;
+          }
+        }
+      }
+      xpos = parseInt(xpos);
+      ypos = parseInt(ypos);
+      if(check != 1){
+        entnum += 1;
+      for(let z = xpos;z < item;z++){
+        for(let w = ypos;w < oitem;w++){
+          document.getElementById(z + "-" + w).style.backgroundColor = "orange";
+          document.getElementById(z + "-" + w).className = "entity" + entnum + " " + type + " " + "src" + xpos + "-" + ypos;
+        }
+      }
+
+      if(isNaN(xpos) || isNaN(ypos)){
+      }else{
+      $("<img src='" + skin + "' id='image" + entnum + "' class='entity" + entnum + " " + type + " " + "src" + xpos + "-" + ypos + "' >").appendTo("body");
+      document.getElementById("image" + entnum).style.left = ypos*10 + 8 + "px";
+      document.getElementById("image" + entnum).style.top = xpos*10 + 8 + "px";
+      document.getElementById("image" + entnum).style.display = "inline-block";
+      document.getElementById("image" + entnum).style.position = "absolute";
+      document.getElementById("image" + entnum).style.zindex = 1;
+      stuff.push({"Object": type, "X": parseInt(xpos), "Y": parseInt(ypos), "Skin": skin, "Axis": axis})
+      document.getElementById("save").value = JSON.stringify(stuff)
+
+    }
+    }
+  }
+    }
+  }
+
+window.onload=  load();
+
+
+</script>
+
+</body>
+</html>

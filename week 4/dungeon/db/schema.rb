@@ -10,22 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180413231213) do
+ActiveRecord::Schema.define(version: 20180331003641) do
 
-  create_table "animals", force: :cascade do |t|
-    t.string "name"
-    t.string "spieces"
-    t.string "age"
-    t.string "smell"
-    t.string "num_legs"
-    t.string "fave_snack"
-    t.string "blurb"
-    t.integer "owner_id"
+  create_table "raids", force: :cascade do |t|
+    t.string "username"
+    t.string "dungeon"
+    t.float "difficulty"
+    t.integer "played"
+    t.integer "success"
   end
 
-  create_table "owners", force: :cascade do |t|
-    t.string "first"
-    t.string "last"
+  create_table "users", force: :cascade do |t|
+    t.string "username"
+    t.string "password"
+    t.string "email"
+    t.boolean "verify"
   end
 
 end

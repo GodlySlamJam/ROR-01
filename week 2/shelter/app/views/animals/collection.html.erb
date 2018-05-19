@@ -5,5 +5,9 @@
 <h3>Smell:<%= animal.smell %></h3>
 <h3>Age:<%= animal.age %></h3>
 <h3>Eat:<%= animal.fave_snack %></h3>
+<form method="post" action="/animals/editing/">
+  <input name="idy" type="hidden" value="<%= animal.owner_id %>">
+  <input type="submit" value="Edit">
+</form>
 </div>
 <% end %>

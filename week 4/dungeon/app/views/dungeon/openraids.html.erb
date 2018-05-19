@@ -1,0 +1,13 @@
+<h1><a href="http://localhost:3000/dungeons/create">Create Dungeon</a></h1>
+
+<% for raid in @dung %>
+<div>
+<p><%= raid.username %></p>
+<p>Played:<%= raid.played %></p>
+<p>Success Rate:<%= print raid.played.to_f / raid.success.to_f %>
+<form method="post" action="/dungeons/play">
+  <input name="id" type="hidden" value="<%= raid.id %>">
+  <input type="submit" value="Play">
+</form>
+</div>
+<% end %>
